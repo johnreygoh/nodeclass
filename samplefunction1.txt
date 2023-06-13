@@ -1,0 +1,49 @@
+'use strict';       //cannot use vars that are not defined
+console.log('loading sample function 1.....');
+
+//function needs to be exported
+//cjs = commonJS, require(),module exports      <---- nodejs <14
+//es m = import, export const function1 = () => {} <--nodejs >=16
+
+//user request is in JSON format
+export const handler = async(event) =>{
+
+    let name = 'John';
+    let city = 'Manila';
+    let responseCode = 200;
+
+    console.log("request:" + JSON.stringify(event));
+
+    if(event.queryStringParameter && event.queryStringParameter.name){
+        console.log("received name:" + event.queryStringParameter.name);
+        name = event.queryStringParameter.name;
+    }
+
+    if(event.queryStringParameter && event.queryStringParameter.city){
+        console.log("received city:" + event.queryStringParameter.city);
+        city = event.queryStringParameter.city;
+    }
+
+    let greeting = `Good day ${name} of ${city}`;
+
+    let responseBody = {
+        message: greeting,
+        input: event
+    }
+
+    let response = {
+        statusCode: responseCode,
+        headers: {
+            "x-custom-header": "my custom header value"
+        },
+        body: JSON.stringify(responseBody);
+    }
+
+    console.log("response:" + JSON.stringify(response));
+
+    return response;
+
+}
+
+
+
